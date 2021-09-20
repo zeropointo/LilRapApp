@@ -1,0 +1,34 @@
+{
+    "artists": [
+      {
+        "id": "b4781407-da92-475e-8d87-596aee0d7f2d",
+        "name": "Kanye West",
+        "description": "Kanye Omari West is an American rapper, singer, songwriter, record producer, fashion designer, and entrepreneur.",
+        "image": "https://github.com/zeropointo/LilRapApp/blob/main/rapper_data/KanyeWest.jpeg?raw=true"
+      },
+      {
+        "id": "b471f99a-0942-4e4f-be26-344fe5f7e88d",
+        "name": "Drake",
+        "description": "Aubrey Drake Graham is a Canadian rapper, singer, songwriter, record producer, actor, and entrepreneur. Drake initially gained recognition as an actor on the teen drama television series Degrassi: The Next Generation in the early 2000s.",
+        "image": "https://github.com/zeropointo/LilRapApp/blob/main/rapper_data/Drake.jpeg?raw=true"
+      },
+      {
+        "id": "0161c438-21ca-4112-a166-91cff2a3e1b3",
+        "name": "Kendrick Lamar",
+        "description": "Kendrick Lamar Duckworth is an American rapper and songwriter. Raised in Compton, California, Lamar embarked on his musical career as a teenager under the stage name K-Dot, releasing a mixtape that garnered local attention and led to his signing with indie record label Top Dawg Entertainment (TDE)",
+        "image": "https://github.com/zeropointo/LilRapApp/blob/main/rapper_data/Kendrick.jpeg?raw=true"
+      },
+      {
+        "id": "4867d1ca-cabe-485f-aef8-daac15c1f998",
+        "name": "Future",
+        "description": "Nayvadius DeMun Wilburn, known professionally as Future, is an American rapper, singer, songwriter, and record producer.",
+        "image": "https://github.com/zeropointo/LilRapApp/blob/main/rapper_data/Future.png?raw=true"
+      },
+      {
+        "id": "d4cec773-c287-4efe-aca5-4274accb6656",
+        "name": "J. Cole",
+        "description": "Jermaine Lamarr Cole, better known by his stage name J. Cole, is an American hip hop recording artist and record producer.",
+        "image": "https://github.com/zeropointo/LilRapApp/blob/main/rapper_data/JCole.jpeg?raw=true"
+      }
+    ]
+  }
