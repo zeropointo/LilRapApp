@@ -33,7 +33,7 @@ void main() {
 
       verify(mockClient.get(
           Uri.parse(
-              'http://assets.aloompa.com.s3.amazonaws.com/rappers/rappers.json'),
+              'https://github.com/zeropointo/LilRapApp/blob/main/rapper_data/rappers.json?raw=true'),
           headers: {'Content-Type': 'application/json'}));
     });
 

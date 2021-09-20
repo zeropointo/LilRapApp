@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/rapper.dart';
@@ -13,61 +13,67 @@ part 'rapper_state.dart';
 const String SERVER_FAILURE_MESSAGE = 'Server failure';
 const String CACHE_FAILURE_MESSAGE = 'Cache failure';
 
-/// Bloc serivicing requests for Rapper data.
-class RapperBloc extends Bloc<RapperEvent, RapperState> {
+/// Bloc consuming events and producing states.
+class RapperBloc {
   RapperBloc(
-      {required this.getConcreteRapper, required this.getConcreteRapperList})
-      : super(Initial());
+      {required this.getConcreteRapper, required this.getConcreteRapperList}) {
+    _rapperEventController.stream.listen(_mapEventToState);
+  }
 
+  // Usecases
   final GetConcreteRapper getConcreteRapper;
   final GetConcreteRapperList getConcreteRapperList;
 
-  /// Handles incomming events.
-  @override
-  Stream<RapperState> mapEventToState(
-    RapperEvent event,
-  ) async* {
+  // INPUT RapperEvent SINK
+  final _rapperEventController = StreamController<RapperEvent>();
+  Sink<RapperEvent> get rapperEvent => _rapperEventController.sink;
+
+  // OUTPUT RapperState STREAM
+  final _rapperState = BehaviorSubject<RapperState>.seeded(Initial());
+  Stream<RapperState> get rapperState => _rapperState.stream;
+
+  Future<void> _mapEventToState(RapperEvent event) async {
     if (event is GetRapperEvent) {
-      yield Loading();
+      _rapperState.add(Loading());
 
       final failureOrRapper = await getConcreteRapper(event.id);
 
-      yield* failureOrRapper.fold(
-        (failure) async* {
-          yield Error(message: _mapFailureToMessage(failure));
+      _rapperState.add(failureOrRapper.fold(
+        (failure) {
+          return Error(message: _mapFailureToMessage(failure));
         },
-        (rapper) async* {
-          yield Loaded(rapperList: [rapper]);
+        (rapper) {
+          return Loaded(rapperList: [rapper]);
         },
-      );
+      ));
     } else if (event is GetRapperListEvent) {
-      yield Loading();
+      _rapperState.add(Loading());
 
       final failureOrRapper = await getConcreteRapperList('_');
 
-      yield* failureOrRapper.fold(
-        (failure) async* {
-          yield Error(message: _mapFailureToMessage(failure));
+      _rapperState.add(failureOrRapper.fold(
+        (failure) {
+          return Error(message: _mapFailureToMessage(failure));
         },
-        (rapperList) async* {
+        (rapperList) {
           List<Rapper> sorted = rapperList;
 
           sorted.sort(
               (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
-          yield Loaded(rapperList: sorted);
+          return Loaded(rapperList: sorted);
         },
-      );
+      ));
     } else if (event is GetFilteredRapperListEvent) {
-      yield Loading();
+      _rapperState.add(Loading());
 
       final failureOrRapper = await getConcreteRapperList('_');
 
-      yield* failureOrRapper.fold(
-        (failure) async* {
-          yield Error(message: _mapFailureToMessage(failure));
+      _rapperState.add(failureOrRapper.fold(
+        (failure) {
+          return Error(message: _mapFailureToMessage(failure));
         },
-        (rapperList) async* {
+        (rapperList) {
           List<Rapper> sorted = rapperList;
 
           sorted.sort(
@@ -76,9 +82,9 @@ class RapperBloc extends Bloc<RapperEvent, RapperState> {
           Iterable<Rapper> filtered = sorted.where((r) =>
               r.name.toLowerCase().contains(event.expression.toLowerCase()));
 
-          yield Loaded(rapperList: filtered.toList());
+          return Loaded(rapperList: filtered.toList());
         },
-      );
+      ));
     }
   }
 
@@ -92,5 +98,10 @@ class RapperBloc extends Bloc<RapperEvent, RapperState> {
       default:
         return "Unexpected failure";
     }
+  }
+
+  void dispose() {
+    _rapperState.close();
+    _rapperEventController.close();
   }
 }

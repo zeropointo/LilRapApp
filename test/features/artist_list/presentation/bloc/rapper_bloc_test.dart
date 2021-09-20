@@ -23,8 +23,9 @@ void main() {
         getConcreteRapperList: mockGetConcreteRapperList);
   });
 
-  test('Initial state should be Initial', () {
-    expect(rapperBloc.state, equals(Initial()));
+  test('Initial state should be Initial', () async {
+    RapperState result = await rapperBloc.rapperState.first;
+    expect(result, equals(Initial()));
   });
 
   group('GetConcreteRapper', () {
@@ -40,7 +41,7 @@ void main() {
       when(mockGetConcreteRapper(any))
           .thenAnswer((_) async => Right(rapperModel));
 
-      rapperBloc.add(GetRapperEvent(id: id));
+      rapperBloc.rapperEvent.add(GetRapperEvent(id: id));
       await untilCalled(mockGetConcreteRapper(id));
 
       verify(mockGetConcreteRapper(id));
@@ -51,35 +52,44 @@ void main() {
           .thenAnswer((_) async => Right(rapperModel));
 
       final expected = [
+        Initial(),
         Loading(),
         Loaded(rapperList: [rapperModel])
       ];
 
-      expectLater(rapperBloc.stream, emitsInOrder(expected));
+      expectLater(rapperBloc.rapperState, emitsInOrder(expected));
 
-      rapperBloc.add(GetRapperEvent(id: id));
+      rapperBloc.rapperEvent.add(GetRapperEvent(id: id));
     });
 
     test('Should emit Loading then Error when server request fails', () async {
       when(mockGetConcreteRapper(any))
           .thenAnswer((_) async => Left(ServerFailure()));
 
-      final expected = [Loading(), Error(message: SERVER_FAILURE_MESSAGE)];
+      final expected = [
+        Initial(),
+        Loading(),
+        Error(message: SERVER_FAILURE_MESSAGE)
+      ];
 
-      expectLater(rapperBloc.stream, emitsInOrder(expected));
+      expectLater(rapperBloc.rapperState, emitsInOrder(expected));
 
-      rapperBloc.add(GetRapperEvent(id: id));
+      rapperBloc.rapperEvent.add(GetRapperEvent(id: id));
     });
 
     test('Should emit Loading then Error when cache request fails', () async {
       when(mockGetConcreteRapper(any))
           .thenAnswer((_) async => Left(CacheFailure()));
 
-      final expected = [Loading(), Error(message: CACHE_FAILURE_MESSAGE)];
+      final expected = [
+        Initial(),
+        Loading(),
+        Error(message: CACHE_FAILURE_MESSAGE)
+      ];
 
-      expectLater(rapperBloc.stream, emitsInOrder(expected));
+      expectLater(rapperBloc.rapperState, emitsInOrder(expected));
 
-      rapperBloc.add(GetRapperEvent(id: id));
+      rapperBloc.rapperEvent.add(GetRapperEvent(id: id));
     });
   });
 
