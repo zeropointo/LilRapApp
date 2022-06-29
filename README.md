@@ -1,6 +1,10 @@
 
 # LilRapApp: SOLID & Test Driven
 
+| List Screen  | Profile Screen |
+| ------------- | ------------- |
+| ![list](https://github.com/zeropointo/LilRapApp/blob/main/images/list.png?raw=true)  | ![profile](https://github.com/zeropointo/LilRapApp/blob/main/images/profile.png?raw=true)  |
+
 ## Directory structure
 
     /lib                         Flutter source code
@@ -37,6 +41,6 @@
     |           +---bloc         
     +---fixtures                 Fake data generation
 
-| List Screen  | Profile Screen |
-| ------------- | ------------- |
-| ![list](https://github.com/zeropointo/LilRapApp/blob/main/images/list.png?raw=true)  | ![profile](https://github.com/zeropointo/LilRapApp/blob/main/images/profile.png?raw=true)  |
+
+## Architecture
+![image](https://github.com/zeropointo/LilRapApp/blob/main/images/arch_diagram.png?raw=true)
